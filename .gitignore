@@ -1,0 +1,5 @@
+# Ignore Visual Studio Code folders
+.vscode/
+
+# Ignore Mac OS X storage files
+.DS_Store
