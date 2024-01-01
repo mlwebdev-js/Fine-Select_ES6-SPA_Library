@@ -1,0 +1,54 @@
+
+.size-up {
+    width:200px;
+    padding:20px;
+    height: 10px;
+    width:250px;
+    border: 1px solid #f7f0f0;
+    border-style: outset;
+    border-radius: 20px;
+}
+
+.strong-text {
+    font-weight: bold sans-serif ;
+}
+
+.form-submit-button, #loadAbout, #loadContact {
+    background: #44a2ee;
+    color: #fff;
+    height: 50px;
+    width:250px;
+    background: #44a2ee;
+    color: #fff;
+    border: 1px solid #eee;
+    border-style: outset;
+    border-radius: 20px;
+    font: bold 15px arial,sans-serif;
+    text-shadow: none;
+    margin: 20px 0px 20px 0px;
+    padding:20px;
+    }
+
+
+
+/*  */
+    .form-submit-button:hover {
+    background: #016ABC;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+    }
+
+
+input {
+    display: block;
+    margin: 20px 0px 20px 0px;
+}
+
+input[type="text"]::placeholder {
+    color: gray;
+    font-size: 14px;
+    /* Other placeholder styling properties */
+}
