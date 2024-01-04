@@ -13,3 +13,6 @@ export default class Controller {
         this.utility.loadHtmlTemplate('./templates/contact.html', '#contentArea');
     }
 }
+// End Controller.js
+
+

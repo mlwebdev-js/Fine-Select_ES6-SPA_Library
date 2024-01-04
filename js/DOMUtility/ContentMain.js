@@ -12,6 +12,7 @@ export default class ContentMain {
         this.nav_ul = this.utility.fs('#nav-ul');
     }
 
+    // initializeApp allows multiple methods ti be initialized
     initializeApp() {
         this.setupDynamicContent();
     }
@@ -53,3 +54,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentMain = new ContentMain();
     contentMain.initializeApp();
 });
+// End ContentMain.js
