@@ -24,8 +24,8 @@ export default class ContentMain {
                 children: [
                     {
                         tagName: 'a',
-                        content: 'Home',
-                        attributes: { href: '#home' }
+                        content: 'Store',
+                        attributes: { href: '#store' }
                     }
                 ]
             },
@@ -35,8 +35,8 @@ export default class ContentMain {
                 children: [
                     {
                         tagName: 'a',
-                        content: 'About',
-                        attributes: { href: '#about' }
+                        content: 'Services',
+                        attributes: { href: '#services' }
                     }
                 ]
             }
@@ -44,7 +44,7 @@ export default class ContentMain {
         ];
 
         const elements = this.utility.createElements(elementData);
-        elements.forEach(element => this.pageManager.nav_ul.appendChild(element));
+        elements.forEach(element => this.nav_ul.appendChild(element));
     }
 }
 

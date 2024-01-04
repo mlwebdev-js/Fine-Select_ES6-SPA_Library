@@ -1,3 +1,51 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif; /* You can choose your preferred font */
+}
+
+/* Styling the navigation bar */
+#nav-bar {
+    background-color: black; /* Black background */
+    color: white; /* White text */
+    position: sticky; /* Makes the navbar sticky */
+    top: 0; /* Stick to the top of the page */
+    z-index: 1000; /* Ensures navbar stays above other content */
+    padding: 20px 20px; /* Some padding around the content */
+}
+
+/* Styling the list inside the navbar */
+#nav-ul {
+    list-style: none; /* Removes bullet points */
+    display: flex; /* Aligns items in a row */
+    justify-content: flex-end; /* Aligns links to the right */
+}
+
+/* Styling each navigation item */
+.nav-item {
+    margin-left: 20px; /* Adds space between the links */
+}
+
+/* Styling the links */
+.nav-item a {
+    color: white; /* White text color */
+    text-decoration: none; /* Removes underline */
+    font-size: 16px; /* Sets the font size */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover effect on links */
+.nav-item a:hover {
+    color: grey; /* Changes color when hovered */
+}
+
+
+
 
 .size-up {
     width:200px;
