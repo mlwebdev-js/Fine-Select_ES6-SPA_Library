@@ -1,52 +1,55 @@
-// js/DOMUtility/MainContent.js
+// js/DOMUtility/ContentMain.js
 import Utility from './Utility.js';
 import PageManager from './PageManager.js';
 import Controller from './Controller.js';
-// import Validation from './Validation.js';
 
-
-export default class MainContent {
-    constructor() {
+export default class ContentMain {
+    constructor(controller) {
         this.utility = new Utility();
         this.controller = new Controller(this.utility);
         this.pageManager = new PageManager(this.controller);
+        this.controller = controller;
+        this.nav_ul = this.utility.fs('#nav-ul');
     }
-
 
     initializeApp() {
         this.setupDynamicContent();
-        // Any other initialization logic...
     }
 
     setupDynamicContent() {
-    // Define the elements to create
-    // Example of dynamically creating layout
-    const elementData = [
-        {
-            tagName: 'div',
-            content: `Dynamic Element 1 with id: ${'dynamic1'}`, // Updated content`,
-            attributes: { 
-                id: 'dynamic1', 
-                class: 'dynamic-class'
+        const elementData = [
+            {
+                tagName: 'li',
+                attributes: { class: 'nav-item' },
+                children: [
+                    {
+                        tagName: 'a',
+                        content: 'Home',
+                        attributes: { href: '#home' }
+                    }
+                ]
+            },
+            {
+                tagName: 'li',
+                attributes: { class: 'nav-item' },
+                children: [
+                    {
+                        tagName: 'a',
+                        content: 'About',
+                        attributes: { href: '#about' }
+                    }
+                ]
             }
-        },
-        {
-            tagName: 'div',
-            content: 'Dynamic Element 2',
-            attributes: { 
-                id: 'dynamic2', 
-                class: 'dynamic-class'   
-            }
-        }
-    ];
+            // ... more li elements with nested a tags ...
+        ];
 
-    // Use PageManager to create and append the elements
-    this.pageManager.createDynamicLayout(elementData);
+        const elements = this.utility.createElements(elementData);
+        elements.forEach(element => this.pageManager.nav_ul.appendChild(element));
     }
 }
 
-// Usage of MainContent
+// Usage of ContentMain
 document.addEventListener('DOMContentLoaded', () => {
-    const mainContent = new MainContent();
-    mainContent.initializeApp();
+    const contentMain = new ContentMain();
+    contentMain.initializeApp();
 });

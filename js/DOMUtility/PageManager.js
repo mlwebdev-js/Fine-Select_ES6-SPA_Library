@@ -12,6 +12,7 @@ export default class PageManager {
         this.utility = new Utility();
         this.controller = controller;
         this.root = this.utility.fs('#root');
+        this.nav_ul = this.utility.fs('#nav-ul');
         this.init();
     }
 
@@ -55,6 +56,8 @@ export default class PageManager {
         const buttons = this.utility.createElements(buttonData);
         buttons.forEach(button => this.root.appendChild(button));
     }
+
+    
 
     setupEventListeners() {
 

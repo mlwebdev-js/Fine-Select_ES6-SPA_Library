@@ -12,16 +12,32 @@ export default class Utility {
     /* Method:  createElements => Invocation 
      * Purpose:  Creates an array of elements from an array of objects.
     */
+
     createElements(elements) {
-        return elements.map(({ tagName, content, attributes }) => {
+        return elements.map(({ tagName, content, attributes, children }) => {
             const element = document.createElement(tagName);
-            element.textContent = content;
-            Object.entries(attributes).forEach(([attr, value]) => {
+            if (content) {
+                element.textContent = content;
+            }
+            Object.entries(attributes || {}).forEach(([attr, value]) => {
                 element.setAttribute(attr, value);
             });
+
+            if (children && children.length > 0) {
+                children.forEach(child => {
+                    const childElement = this.createElements([child])[0];
+                    element.appendChild(childElement);
+                });
+            }
+
             return element;
         });
     }
+
+    // ... other methods ...
+
+
+
     
         /* Method:  setAttributes => Invocation
         *  Purpose:  Sets the attributes of an element.
@@ -80,6 +96,7 @@ export default class Utility {
         }
     }
 }
+
 
 
 
