@@ -1,13 +1,13 @@
 // js/DOMUtility/ContentMain.js
 import Utility from './Utility.js';
-import PageManager from './PageManager.js';
+// import PageManager from './PageManager.js';
 import Controller from './Controller.js';
 
 export default class ContentMain {
     constructor(controller) {
         this.utility = new Utility();
         this.controller = new Controller(this.utility);
-        this.pageManager = new PageManager(this.controller);
+        // this.pageManager = new PageManager(this.controller);
         this.controller = controller;
         this.nav_ul = this.utility.fs('#nav-ul');
     }
