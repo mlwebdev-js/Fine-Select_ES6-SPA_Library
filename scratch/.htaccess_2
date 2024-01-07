@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Rewrite to templates/about.html when /about is accessed
+RewriteRule ^about$ templates/about.html [NC,L]
+
+# Rewrite to templates/contact.html when /contact is accessed
+RewriteRule ^contact$ templates/contact.html [NC,L]
+
+# Add similar rules for other template files here
+
+# If the requested resource doesn't exist as a file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Then rewrite to index.html
+RewriteRule ^ index.html [NC,L]

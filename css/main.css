@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: white; /* White text */
 }
 
 body {
@@ -20,6 +19,7 @@ button {
 #nav-bar {
     margin-bottom: 20px;
     background-color: black; /* Black background */
+    color: white; /* White text */
     position: sticky; /* Makes the navbar sticky */
     top: 0; /* Stick to the top of the page */
     z-index: 1000; /* Ensures navbar stays above other content */

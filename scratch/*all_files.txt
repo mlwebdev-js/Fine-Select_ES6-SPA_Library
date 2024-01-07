@@ -1,0 +1,537 @@
+*index.html
+<!-- index.html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FS - SPA ES6 Library 2</title>
+    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
+</head>
+<body>
+
+    <nav id="nav-bar">
+        <h1>Fine Select ES6 SPA Library</h1>
+        <ul id="nav-ul"></ul>
+    </nav>
+
+    <div id="root"></div><!-- Buttons will be dynamically added here -->
+
+    <div id="contentArea"></div><!-- Content loaded from external HTML files will appear here -->
+
+    <div id="form-container"></div>
+
+
+    <!-- Include the JavaScript files -->
+    <script type="module" src="js/DOMUtility/Utility.js"></script>
+    <script type="module" src="js/DOMUtility/PageManager.js"></script>
+    <script type="module" src="js/DOMUtility/NavBarBuilder.js"></script>
+
+
+    <!--    
+        <script type="module" src="js/FormUtility/FormModel.js"></script>
+        <script type="module" src="js/FormUtility/FormMain.js"></script>
+        <script type="module" src="js/DOMUtility/Validation.js"></script> 
+    -->
+</body>
+</html>
+<!-- End index.html-->
+
+*Utility.js
+// js/DOMUtility/Utility.js
+export default class Utility {
+    constructor() {}
+
+    /* Method:  fs => Invocation 
+     * Purpose:  Returns the first element that matches the given CSS selector.
+    */
+    fs(selector) {
+        return document.querySelector(selector);
+    }
+
+    /* Method:  createElements => Invocation 
+     * Purpose:  Creates an array of elements from an array of objects.
+    */
+
+    createElements(elements) {
+        return elements.map(({ tagName, content, attributes, children }) => {
+            const element = document.createElement(tagName);
+            if (content) {
+                element.textContent = content;
+            }
+            Object.entries(attributes || {}).forEach(([attr, value]) => {
+                element.setAttribute(attr, value);
+            });
+
+            if (children && children.length > 0) {
+                children.forEach(child => {
+                    const childElement = this.createElements([child])[0];
+                    element.appendChild(childElement);
+                });
+            }
+
+            return element;
+        });
+    }
+
+    // ... other methods ...
+
+
+
+    
+        /* Method:  setAttributes => Invocation
+        *  Purpose:  Sets the attributes of an element.
+        *  Parameters:
+        *  - element: The element to set the attributes on.
+        *  - attributes: An object containing the attributes to set.
+        *  Returns: None.
+        *  Throws:  None.
+        *  Example:
+        *  const element = document.createElement('div');
+        *  const attributes = {
+
+        *  setAttributes(element, attributes);
+        *  This will set the attributes on the element.
+        *  The element will have the following attributes:
+        *  - id: 'my-div'
+        *  - class: 'my-class'
+        *  - data-id: '123'
+        *  - data-name: 'John'
+        *  The element will be updated with the new attributes.
+        */
+        setAttributes(element, attributes) {
+            for (const key in attributes) {
+                element.setAttribute(key, attributes[key]);
+            }
+        }
+    
+    /* Method:  loadHtmlTemplate => Invocation 
+    *  Purpose:  Loads an HTML template from a URL and inserts it into a target element.
+    *  Parameters:
+    *  - url: The URL of the HTML template to load.
+    *  - targetElementId: The ID of the target element to insert the HTML template into.
+    *  Returns: - A Promise that resolves when the HTML template is loaded and inserted into the target element.
+    *  Throws: - An error if the HTML template cannot be loaded or inserted into the target element.
+    *  Example:
+    *  loadHtmlTemplate('https://example.com/template.html', 'targetElementId');
+    *  This will load the HTML template from the given URL and insert it into the target element with the given ID.
+    *  The Promise will resolve when the HTML template is loaded and inserted into the target element.
+    *  If there is an error loading or inserting the HTML template, the Promise will reject with the error.
+    *  The error will be logged to the console.
+    *  Note: This method is not specific to the DOMUtility library. It can be used in any JavaScript application. 
+    *  It can be used with other frameworks or libraries. 
+    *  The loadHtmlTemplate method can be used to load and insert HTML templates into any HTML element. 
+    *  It can be used to dynamically load and insert HTML templates into the DOM, 
+    *  any other application, into any other website, into any HTML element or frameworks or libraries. 
+    */
+    async loadHtmlTemplate(url, targetElementId) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const html = await response.text();
+            const targetElement = this.fs(targetElementId);
+            targetElement.innerHTML = html;
+        } catch (e) {
+            console.error("Error loading template:", e);
+        }
+    }
+}
+// End Utility.js
+
+
+*Controller.js
+// js/DOMUtility/Controller.js
+export default class Controller {
+    constructor(utility, validation) {
+        this.utility = utility;
+        this.validation = validation;
+    }
+
+    loadContactForm(formMain) {
+        formMain.initializeForm(); 
+        // FormMain instance will handle form rendering
+    }
+
+    loadAboutPage() {
+        this.utility.loadHtmlTemplate(
+            './templates/about.html', 
+            '#contentArea'
+        );
+    }
+    // 
+    loadContactPage() {
+        this.utility.loadHtmlTemplate(
+            './templates/contact.html', 
+            '#contentArea'
+        );
+    }
+    loadStorePage() {
+        this.utility.loadHtmlTemplate(
+            './templates/store.html', 
+            '#contentArea'
+        );
+    }
+    loadServicesPage() {
+        this.utility.loadHtmlTemplate(
+            './templates/services.html', 
+            '#contentArea'
+        );
+    }
+    removeFormAndLoadAbout(formMain) {
+        if (formMain.isFormRendered) {
+            const formContainer = this.utility.fs(formMain.formModel.container);
+            formContainer.innerHTML = ''; // Clear the form container
+            formMain.isFormRendered = false; // Reset the form rendered state
+        }
+        this.loadAboutPage(); // Load the about page
+    }
+}
+// End Controller.js
+
+
+*PageManager
+// js/DOMUtility/PageManager.js
+import Utility from './Utility.js';
+import Controller from './Controller.js';  
+import FormMain from '../FormUtility/FormMain.js'; // Import FormMain
+
+
+export default class PageManager {
+    constructor() {
+        this.utility = new Utility();
+        this.controller = new Controller(this.utility);  // Create an instance of Controller     
+        this.root = this.utility.fs('#root');
+        this.formMain = new FormMain('form-container'); // Create an instance of FormMain
+    }
+
+    init() {
+        this.createButtons();
+        this.setupEventListeners();
+    }
+
+    createButtons() {
+        const buttonData = [
+            {
+                tagName: 'button',
+                content: 'Load About Page',
+                attributes: { id: 'loadAbout' }
+            },
+            {
+                tagName: 'button',
+                content: 'Load Contact Page',
+                attributes: { id: 'loadContact' }
+            }
+        ];
+
+        const buttons = this.utility.createElements(buttonData);
+        buttons.forEach(button => this.root.appendChild(button));
+    }
+
+    setupEventListeners() {
+        const aboutButton = this.utility.fs('#loadAbout');
+        const contactButton = this.utility.fs('#loadContact');
+        
+
+        if (aboutButton) {
+            aboutButton.addEventListener('click', () => {
+                this.controller.loadAboutPage(); 
+            // Use Controller to load About Page
+            });
+        }
+
+        /* 
+         *  if contactButton is clicked loadContactPage
+        */
+        if (contactButton) {
+            contactButton.addEventListener('click', () => {
+                this.controller.loadContactPage(),
+                this.controller.loadContactForm(this.formMain); 
+            // Use Controller to load Contact Page
+            });
+        }
+    }
+}
+
+// Initialize and use PageManager independently
+document.addEventListener('DOMContentLoaded', () => {
+    const pageManager = new PageManager();
+    pageManager.init();
+});
+// End PageManager
+
+
+*NavBarBuilder
+// js/DOMUtility/NavBarBuilder.js
+import Utility from './Utility.js';
+import Controller from './Controller.js';
+
+export default class NavBarBuilder {
+    constructor(controller) {
+        this.utility = new Utility();
+        this.controller = new Controller(this.utility);
+        this.controller = controller;
+        this.nav_ul = this.utility.fs('#nav-ul');
+    }
+
+    // initializeApp allows multiple methods ti be initialized
+    initializeApp() {
+        this.setupDynamicNav();
+        this.setupEventListeners();
+    }
+
+    setupDynamicNav() {
+        const NavBarData = [
+            {
+                tagName: 'li',
+                attributes: { class: 'nav-item' },
+                children: [
+                    {
+                        tagName: 'a',
+                        content: 'Store',
+                        attributes: { href: '#store', id: '#store' }
+                    }
+                ]
+            },
+            {
+                tagName: 'li',
+                attributes: { class: 'nav-item' },
+                children: [
+                    {
+                        tagName: 'a',
+                        content: 'Services',
+                        attributes: { href: '#services', id: '#services' }
+                    }
+                ]
+            }
+            // ... more li elements with nested a tags ...
+        ];
+
+        const navlinks = this.utility.createElements(NavBarData);
+        navlinks.forEach(navlink => this.nav_ul.appendChild(navlink));
+    }
+
+
+setupEventListeners() {
+    const storeLink = this.utility.fs('#store');
+    const servicesLink = this.utility.fs('#services');
+    
+    if (storeLink) {
+        storeLink.addEventListener('click', () => {
+            history.pushState({}, '', 'store'); // Update URL without reloading
+            this.controller.loadStorePage();
+        });
+    }
+    if (servicesLink) {
+        servicesLink.addEventListener('click', () => {
+            history.pushState({}, '', 'services'); // Update URL without reloading
+            this.controller.loadServicesPage(); 
+        });
+    }
+}
+
+loadPageBasedOnURL() {
+    const path = window.location.pathname;
+    //const pageManager = new PageManager();
+
+    if (path === '/store') {
+        this.controller.loadStorePage();
+    } if (path === '/services') {
+        this.controller.loadServicesPage();
+    } //else {
+        // Load default page or handle 404
+    //}
+    }
+}
+
+
+// Usage of NavBarBuilder - Formerly was ContentMain
+document.addEventListener('DOMContentLoaded', () => {
+    const navBarBuilder = new NavBarBuilder();
+    navBarBuilder.initializeApp();
+});
+// End NavBarBuilder.js
+
+
+*about.html
+<!-- templates/about.html-->
+<div id="about">
+    <p id="content">This is from the about.html page</p>
+</div>
+<!-- End about.html -->
+
+
+*contact.html 
+<!-- templates/contact.html -->
+<div id="contact">
+    <p id="content">This is from the contact.html page</p>
+</div>
+<div id="contact-form-container"></div>
+<!-- End contact.html  // End templates folder --> 
+
+*services.html
+<!-- services.html -->
+<div id="services_Container">
+
+    <p>Web Development</p>
+    <p>Auto Repair</p>
+    <p>Auto Detailing</p>
+    <p>Entertainment</p>
+</div>
+
+
+*store.html
+<!-- store.html -->
+<p>Store content </p>
+
+
+
+*.htaccess
+RewriteEngine On
+
+# Rewrite to templates/about.html when /about is accessed
+RewriteRule ^about$ templates/about.html [NC,L]
+
+# Rewrite to templates/contact.html when /contact is accessed
+RewriteRule ^contact$ templates/contact.html [NC,L]
+
+# Add similar rules for other template files here
+
+# If the requested resource doesn't exist as a file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Then rewrite to index.html
+RewriteRule ^ index.html [NC,L]
+
+// End .htaccess
+
+*main.css
+/*  css/main.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif; /* You can choose your preferred font */
+    background-color: #333;
+}
+
+button {
+    margin-top: 20px;
+
+}
+
+/* Styling the navigation bar */
+#nav-bar {
+    margin-bottom: 20px;
+    background-color: black; /* Black background */
+    color: white; /* White text */
+    position: sticky; /* Makes the navbar sticky */
+    top: 0; /* Stick to the top of the page */
+    z-index: 1000; /* Ensures navbar stays above other content */
+    padding: 20px 20px; /* Some padding around the content */
+    text-align:justify;
+}
+
+/* Styling the list inside the navbar */
+#nav-ul {
+    list-style: none; /* Removes bullet points */
+    display: flex; /* Aligns items in a row */
+    justify-content: flex-end; /* Aligns links to the right */
+}
+
+/* Styling each navigation item */
+.nav-item {
+    margin-left: 20px; /* Adds space between the links */
+}
+
+/* Styling the links */
+.nav-item a {
+    color: white; /* White text color */
+    text-decoration: none; /* Removes underline */
+    font-size: 16px; /* Sets the font size */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover effect on links */
+.nav-item a:hover {
+    color: grey; /* Changes color when hovered */
+}
+
+
+
+.size-up {
+    width:200px;
+    padding:20px;
+    height: 10px;
+    width:250px;
+    border: 1px solid #f7f0f0;
+    border-style: outset;
+    border-radius: 20px;
+}
+
+.strong-text {
+    font-weight: bold sans-serif ;
+}
+
+.form-submit-button, #loadAbout, #loadContact {
+    background: #44a2ee;
+    color: #fff;
+    height: 50px;
+    width:250px;
+    background: #44a2ee;
+    color: #fff;
+    border: 1px solid #eee;
+    border-style: outset;
+    border-radius: 20px;
+    font: bold 15px arial,sans-serif;
+    text-shadow: none;
+    margin: 20px 0px 20px 0px;
+    padding:20px;
+    }
+
+
+
+/*  */
+    .form-submit-button:hover {
+    background: #016ABC;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+    }
+
+
+input {
+    display: block;
+    margin: 20px 0px 20px 0px;
+}
+
+input[type="text"]::placeholder {
+    color: gray;
+    font-size: 14px;
+    /* Other placeholder styling properties */
+}
+
+#root, #form-container {
+    margin-left: 15px;
+    color: #eee;
+}
+#loadAbout, #loadContac, #contentArea{
+    margin-right: 10px;
+    margin-left: 15px;
+    color: #eee;
+
+}
+
+/* End main.css */
+
+
+
+
+
+

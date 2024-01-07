@@ -4,11 +4,17 @@ import { FormModel } from './FormModel.js'; // Assuming default export
 export default class FormMain {
     constructor() {
         this.formModel = new FormModel('form-container');
+        this.isFormRendered = false;  // Flag to track if the form is already rendered
+        // this.contactFormContainer = this.utility.fs('contact-form-container');
     }
 
     initializeForm() {
+        if (this.isFormRendered) {
+            return;  // If form is already rendered, do nothing
+        }
         this.addFormFields();
         this.formModel.renderForm();
+        this.isFormRendered = true;  // Set flag to true after rendering
     }
 
     addFormFields() {
@@ -61,7 +67,7 @@ export default class FormMain {
 }
 
 // Usage of FormMain
-document.addEventListener('DOMContentLoaded', () => {
-    const formMain = new FormMain();
-    formMain.initializeForm();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     const formMain = new FormMain();
+//     formMain.initializeForm();
+// });
