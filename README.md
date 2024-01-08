@@ -15,7 +15,7 @@ Fine Select ES6 is a JavaScript Single-Page-Application (SPA) Library designed f
   - `DOMUtility/`:
     - `Utility.js`: Core utility functions for DOM manipulation.
     - `PageManager.js`: Manages page content and navigation.
-    - `ContentMain.js`: Initializer for dynamic content and navigation setup.
+    - `NavBarBuilder.js`: Initializer for dynamic content and navigation setup.
   - `FormUtility/`:
     - `FormModel.js`: Model for form creation and management.
     - `FormMain.js`: Entry point for form initialization.
